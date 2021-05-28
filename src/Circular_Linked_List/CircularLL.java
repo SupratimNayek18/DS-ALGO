@@ -15,14 +15,32 @@ class CircularLL {
     }
     void insertCircularLL(int nodevalue,int position){
         Node node = new Node();
+        node.value = nodevalue;
         if(head==null){
             createCircularLL(nodevalue);
+            return;
         }
         else if(position==1){
-            node.value = nodevalue;
             node.next = head;
             head = node;
-            
+            tail.next = head;             
         }
+        else if(position>=size){
+            node.next = head;
+            tail.next = node;
+            tail = node;
+        }
+        else{
+            Node tempNode = head;
+            int index = 0;
+            while(index<position-1){
+                tempNode = tempNode.next;
+                index++;
+            }
+            Node nextNode = tempNode.next;
+            tempNode.next = node;
+            node.next = nextNode;
+        }
+        size++;
     }
 }
