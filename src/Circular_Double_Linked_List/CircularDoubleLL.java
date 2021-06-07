@@ -1,34 +1,36 @@
-package Double_Linked_List;
+package Circular_Double_Linked_List;
 
-public class DoubleLL {
+public class CircularDoubleLL {
     Node head;
     Node tail;
     int size;
 
-    void createDoubleLL(int nodevalue) {
+    void createCircularDoubleLL(int nodevalue) {
         Node node = new Node();
         node.value = nodevalue;
-        node.prev = null;
-        node.next = null;
+        node.prev = node;
+        node.next = node;
         head = node;
         tail = node;
         size = 1;
     }
 
-    void insertDoubleLL(int nodevalue, int position) {
+    void insertCircularDoubleLL(int nodevalue, int position) {
 
         Node node = new Node();
         node.value = nodevalue;
         if (head==null)
-            createDoubleLL(nodevalue);
+            createCircularDoubleLL(nodevalue);
         else if (position == 1) {
-            node.prev = null;
+            node.prev = tail;
             node.next = head;
             head.prev = node;
+            tail.next = node;
             head = node;
         } else if (position > size) {
-            node.next = null;
+            node.next = head;
             node.prev = tail;
+            head.prev = node;
             tail.next = node;
             tail = node;
         } else {
@@ -45,7 +47,7 @@ public class DoubleLL {
         size++;
     }
 
-    void traverseDoubleLL(){
+    void traverseCircularDoubleLL(){
         Node tempNode = head;
         for(int i=0;i<size;i++){
             System.out.print(tempNode.value);
@@ -57,7 +59,7 @@ public class DoubleLL {
         System.out.println();
     }
 
-    void revTraverseDoubleLL(){
+    void revTraverseCircularDoubleLL(){
         Node tempNode = tail;
         for(int i=0;i<size;i++){
             System.out.print(tempNode.value);
@@ -69,24 +71,23 @@ public class DoubleLL {
         System.out.println();
     }
 
-    void deleteDoubleLL(int position){
+    void deleteCircularDoubleLL(int position){
         Node tempNode = head;
         Node nextNode = head;
         if(position==0)System.out.println("Please Enter a valid position");
         else{
             if(position==1){
-                tempNode = tempNode.next;
-                tempNode.prev = null;
-                head.next = null;
-                head = tempNode;
+                tail.next = head.next;
+                head = head.next;
+                head.prev = tail;
             }
             else if(position>=size){
                 for(int i = 0;i<size-1;i++){
                     tempNode = tempNode.next;
                 }
-                tempNode.next = null;
-                tail.prev = null;
-                tail = tempNode;
+                head.prev=tail.prev;
+                tail = tail.prev;
+                tail.next = head;
             }
             else{
                 for(int i = 0;i<position;i++){
@@ -96,7 +97,7 @@ public class DoubleLL {
                     tempNode = tempNode.next;
                 }
                 tempNode.next = nextNode;
-                nextNode.prev = tempNode;
+                nextNode.prev = tempNode; 
             }
         }
         size--;

@@ -25,7 +25,7 @@ class CircularLL {
             head = node;
             tail.next = head;             
         }
-        else if(position>=size){
+        else if(position>size){
             node.next = head;
             tail.next = node;
             tail = node;
