@@ -84,4 +84,40 @@ public class Questions {
         ll3.traverseLinkedList();
     }
 
+    // Q.5) Intersection of Linked List
+
+    Node getKthNode(Node head, int k) {
+        Node current = head;
+        while (k>0 && current != null) {
+          current = current.next;
+          k--;
+        }
+        return current;
+      }
+    
+      // Intersection Method
+      Node findIntersection(LinkedList list1, LinkedList list2) {
+        // if (list1.head == null || list2.head == null) return null;
+        // if (list1.tail != list2.tail) {
+        //   return null;
+        // }
+        Node shorter = new Node();
+        Node longer = new Node();
+        if (list1.size > list2.size) {
+          longer = list1.head;
+          shorter = list2.head;
+        } else {
+          longer = list2.head;
+          shorter = list1.head;
+        }
+        
+        longer = getKthNode(longer, Math.abs(list1.size-list2.size));
+        while (shorter.value != longer.value) {
+          shorter = shorter.next;
+          longer = longer.next;
+        }
+        return shorter;
+
+      }
+
 }
