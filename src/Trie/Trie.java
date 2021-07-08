@@ -7,7 +7,7 @@ public class Trie {
         root = new TrieNode();
         System.out.println("The Trie has been created");
     }
-
+    
     void insert(String word){
         TrieNode current = root;
         for(int i = 0; i < word.length();i++){
