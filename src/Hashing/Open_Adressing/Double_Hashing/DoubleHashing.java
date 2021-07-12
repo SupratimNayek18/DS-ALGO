@@ -1,28 +1,47 @@
-package Hashing.Open_Adressing.Linear_Probing;
+package Hashing.Open_Adressing.Double_Hashing;
 import java.util.*;
 
-public class LinearProbing {
+public class DoubleHashing {
     String[] hashTable;
-    int usedCellNumber;
-    LinearProbing(int size){
+    int noOfCellsUsedInHashTable;
+
+    //constructor
+    DoubleHashing(int size){
         hashTable = new String[size];
-        usedCellNumber = 0;
+        noOfCellsUsedInHashTable = 0;
     }
 
+    //mod hash function
     int modASCIIHashFunction(String word,int M){
         char ch[];
         ch = word.toCharArray();
-        int sum,i;
-        for(sum = 0, i = 0;i<word.length();i++){
+        int i,sum;
+        for(sum=0,i=0;i<word.length();i++){
             sum = sum + ch[i];
         }
         return sum%M;
     }
 
-    // loadfactor for better performance of hashTable.
-    // If>0.7 need to create new hashTable
-    double getLoadFactor(){
-        return usedCellNumber * 1.0/hashTable.length;
+    private int addAllDigitsTogether(int sum){
+        int value = 0;
+        while(sum>0){
+            value = sum%10;
+            sum = sum/10;
+        }
+        return value;
+    }
+
+    int secondHashFunction(String word,int M){
+        char ch[];
+        ch  = word.toCharArray();
+        int i,sum;
+        for(sum= 0,i=0;i<word.length();i++){
+            sum += ch[i];
+        }
+        while(sum>hashTable.length){
+            sum = addAllDigitsTogether(sum);
+        }
+        return sum%M;
     }
 
     void rehashKeys(String word){
@@ -39,39 +58,32 @@ public class LinearProbing {
             }   
     }
 
+    double getLoadFactor(){
+        return noOfCellsUsedInHashTable * 1.0/hashTable.length;
+    }
 
     void insertInHashTable(String word){
         double loadFactor = getLoadFactor();
         if(loadFactor>=0.75){
             rehashKeys(word);
         }else{
-            int index = modASCIIHashFunction(word,hashTable.length);
-            for(int i = index;i<index+hashTable.length;i++){
-                int newIndex = i % hashTable.length;
+            int x = modASCIIHashFunction(word,hashTable.length);
+            int y = secondHashFunction(word,hashTable.length);
+            System.out.println(x+" "+y); 
+            for(int i = 0; i < hashTable.length; i++){
+                int newIndex = (x + i*y) % hashTable.length;
                 if(hashTable[newIndex]==null){
                     hashTable[newIndex] = word;
-                    System.out.println("The "+word+" successfully inserted at location: "+newIndex);
+                    System.out.println(word + " has been inserted at location " + newIndex);
                     break;
                 }else{
-                    System.out.println(newIndex+" is already occupied. Trying next cell");
+                    System.out.println(newIndex + " Index occupied. Trying next index ");
                 }
             }
         }
-        usedCellNumber++;
+        noOfCellsUsedInHashTable++;
     }
-
-    void displayHashTable(){
-        if(hashTable==null){
-            System.out.println("Hashtable does not exist");
-            return;
-        }else{
-            System.out.println("---------Hashtable---------");
-            for(int i=0;i<hashTable.length;i++){
-                System.out.println("Index "+i+",key:"+hashTable[i]);
-            }
-        }
-    }
-
+    
     int searchInHashTable(String word){
         int index = modASCIIHashFunction(word,hashTable.length);
         for(int i = index;i<index+hashTable.length;i++){
@@ -95,8 +107,15 @@ public class LinearProbing {
         }
     }
 
-    void deleteHastable(){
-        hashTable = null;
-        System.out.println("HashTable deleted");
+    void displayHashTable(){
+        if(hashTable==null){
+            System.out.println("Hashtable does not exist");
+            return;
+        }else{
+            System.out.println("---------Hashtable---------");
+            for(int i=0;i<hashTable.length;i++){
+                System.out.println("Index "+i+",key:"+hashTable[i]);
+            }
+        }
     }
 }

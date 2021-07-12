@@ -1,10 +1,11 @@
-package Hashing.Open_Adressing.Linear_Probing;
+package Hashing.Open_Adressing.Quadratic_Probing;
 import java.util.*;
 
-public class LinearProbing {
+public class QuadraticProbing {
     String[] hashTable;
     int usedCellNumber;
-    LinearProbing(int size){
+
+    QuadraticProbing(int size){
         hashTable = new String[size];
         usedCellNumber = 0;
     }
@@ -12,15 +13,13 @@ public class LinearProbing {
     int modASCIIHashFunction(String word,int M){
         char ch[];
         ch = word.toCharArray();
-        int sum,i;
-        for(sum = 0, i = 0;i<word.length();i++){
+        int i,sum;
+        for(sum=0,i=0;i<word.length();i++){
             sum = sum + ch[i];
         }
         return sum%M;
     }
 
-    // loadfactor for better performance of hashTable.
-    // If>0.7 need to create new hashTable
     double getLoadFactor(){
         return usedCellNumber * 1.0/hashTable.length;
     }
@@ -39,22 +38,23 @@ public class LinearProbing {
             }   
     }
 
-
     void insertInHashTable(String word){
         double loadFactor = getLoadFactor();
         if(loadFactor>=0.75){
             rehashKeys(word);
         }else{
             int index = modASCIIHashFunction(word,hashTable.length);
-            for(int i = index;i<index+hashTable.length;i++){
-                int newIndex = i % hashTable.length;
+            int counter = 0;
+            for(int i=index;i<index+hashTable.length;i++){
+                int newIndex = (index+(counter*counter)) % hashTable.length;
                 if(hashTable[newIndex]==null){
                     hashTable[newIndex] = word;
-                    System.out.println("The "+word+" successfully inserted at location: "+newIndex);
+                    System.out.println(word+" has been successfully inserted at "+newIndex);
                     break;
                 }else{
-                    System.out.println(newIndex+" is already occupied. Trying next cell");
+                    System.out.println(newIndex+" is occupied.Trying next index");
                 }
+                counter++;
             }
         }
         usedCellNumber++;
@@ -93,10 +93,5 @@ public class LinearProbing {
         }else{
             System.out.println(word+" not found in hashTable");
         }
-    }
-
-    void deleteHastable(){
-        hashTable = null;
-        System.out.println("HashTable deleted");
     }
 }
