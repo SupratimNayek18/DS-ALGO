@@ -95,4 +95,58 @@ public class Graph {
         }
         return s.toString();
     }
+
+    void addDirectedEdge(int i, int j){
+        adjacencyMatrix[i][j] = 1;
+    }
+
+    void topologicalVisit(GraphNode node,Stack<GraphNode> stack){
+        ArrayList<GraphNode> neighbours = getNeighbours(node);
+        for (GraphNode neighbour : neighbours) {
+            if (!neighbour.isVisited) {
+              topologicalVisit(neighbour, stack);
+            }
+          }
+          node.isVisited = true;
+          stack.push(node);
+    }
+
+    void topologicalSort(){
+       Stack<GraphNode> stack = new Stack<>();
+       for(GraphNode node : nodeList){
+           if(!node.isVisited){
+               topologicalVisit(node, stack);
+           }
+       }
+       while(!stack.isEmpty()){
+           System.out.print(stack.pop().name+" ");
+       }
+    }
+
+    void printPath(GraphNode node){
+        if(node.parent != null){
+            printPath(node.parent);
+        }
+        System.out.print(node.name+" ");
+    }
+
+    void BFSForSSSPP(GraphNode node){
+        LinkedList<GraphNode> queue = new LinkedList<>();
+        queue.add(node);
+        while(!queue.isEmpty()){
+            GraphNode currentNode = queue.remove(0);
+            currentNode.isVisited = true;
+            System.out.print("Printing path for "+currentNode.name+": ");
+            printPath(currentNode);
+            System.out.println();
+            ArrayList<GraphNode> neighbours = getNeighbours(currentNode);
+            for(GraphNode neighbour : neighbours){
+                if(!neighbour.isVisited){
+                    neighbour.isVisited = true;
+                    neighbour.parent = currentNode;
+                    queue.add(neighbour);
+                }
+            }
+        }
+    }
 }
