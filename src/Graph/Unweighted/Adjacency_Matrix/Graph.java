@@ -1,4 +1,4 @@
-package Graph.Adjacency_Matrix;
+package Graph.Unweighted.Adjacency_Matrix;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Stack;
